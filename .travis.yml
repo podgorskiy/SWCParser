@@ -9,5 +9,5 @@ compiler:
   - gcc
 
 script:
-  - mkdir Build && cd build
+  - mkdir Build && cd Build
   - cmake .. && cmake --build .
