@@ -1,14 +1,13 @@
 os:
-	- linux
+  - linux
 
 language:
-	- cpp
+  - cpp
 
 compiler:
-	- clang
-	- gcc
+  - clang
+  - gcc
 
 script:
-	- mkdir Build && cd build
-	- cmake .. && cmake --build .
-	- ./resolver ::1
+  - mkdir Build && cd build
+  - cmake .. && cmake --build .
