@@ -17,9 +17,13 @@ int main()
 		bool result = parser.ReadSWCFromFile(path.str().c_str(), graph);
 		pass &= result;
 		pass &= vcount[i - 1] == static_cast<int>(graph.vertices.size());
-		if (!pass)
+		if (!result)
 		{
-			printf("failed on %d\n", i);
+			printf("Failed on %d\n", i);
+		}
+		else
+		{
+			printf("Passed: %s\n", path.str().c_str());
 		}
 	}
 
@@ -31,9 +35,13 @@ int main()
 		path << "../tests/illegal" << i << ".swc";
 		bool result = parser.ReadSWCFromFile(path.str().c_str(), graph);
 		pass &= !result;
-		if (!pass)
+		if (result)
 		{
-			printf("failed on %d\n", i);
+			printf("Failed on %d\n", i);
+		}
+		else
+		{
+			printf("Passed: %s\n", path.str().c_str());
 		}
 	}
 
@@ -58,11 +66,22 @@ int main()
 	result = generator.Write(generated, graph);
 	pass &= result;
 
-	pass &= strcmp(generated.c_str(), content) == 0;
+	result = strcmp(generated.c_str(), content) == 0;
+	pass &= result;
 	
+	if (!result)
+	{
+		printf("Failed on comparing read and generated file\n");
+	}
+	else
+	{
+		printf("Passed on comparing read and generated file\n");
+	}
+		
 	if (!pass)
 	{
 		return -1;
 	}
+	printf("Passed all tests\n");
 	return 0;
 }
