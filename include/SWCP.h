@@ -419,19 +419,56 @@ namespace SWCP
 			outStream << "#" << (*it) << '\n';
 		}
 
-		std::map<int64_t, int64_t> edgeMap;
+		std::map<int64_t, int64_t> edgeMapChildToParent;
+		std::map<int64_t, int64_t> inconsistentEdgeMap;
+
 		for (std::vector<Edge>::const_iterator it = graph.edges.begin(); it != graph.edges.end(); ++it)
 		{
-			edgeMap[it->idChild] = it->idParent;
+			std::map<int64_t, int64_t>::const_iterator edgeIt = edgeMapChildToParent.find(it->idChild);
+			if (edgeIt == edgeMapChildToParent.end())
+			{
+				edgeMapChildToParent[it->idChild] = it->idParent;
+			}
+			else
+			{
+				// We have some inconsistency here.
+				inconsistentEdgeMap[it->idParent] = it->idChild;
+			}
+		}
+
+		// This may fix some amount of inconistency.
+		for (std::map<int64_t, int64_t>::const_iterator it = inconsistentEdgeMap.begin(); it != inconsistentEdgeMap.end(); ++it)
+		{
+			int64_t parent = it->first;
+			int64_t child = it->second;
+			int64_t start = child;
+			while (true)
+			{
+				std::map<int64_t, int64_t>::iterator edgeIt = edgeMapChildToParent.find(parent);
+				if (edgeIt == edgeMapChildToParent.end())
+				{
+					edgeMapChildToParent[parent] = child;
+					break;
+				}
+				if (parent == start)
+				{
+					m_errorMessage << "Loop detected!" << '\n';
+					break;
+				}
+				int64_t tmp = parent;
+				parent = edgeIt->second;
+				edgeIt->second = child;
+				child = tmp;
+			}
 		}
 
 		for (std::vector<Vertex>::const_iterator it = graph.vertices.begin(); it != graph.vertices.end(); ++it)
 		{
-			std::map<int64_t, int64_t>::const_iterator parentChild = edgeMap.find(it->id);
+			std::map<int64_t, int64_t>::const_iterator parentVertex = edgeMapChildToParent.find(it->id);
 			int64_t parent = -1;
-			if (parentChild != edgeMap.end())
+			if (parentVertex != edgeMapChildToParent.end())
 			{
-				parent = parentChild->second;
+				parent = parentVertex->second;
 			}
 			char buff[MaxLineSize];
 			sprintf(buff, " %lld %d %.15g %.15g %.15g %.7g %lld\n", it->id, it->type, it->x, it->y, it->z, it->radius, parent);
