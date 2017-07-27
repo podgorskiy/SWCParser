@@ -73,7 +73,7 @@ namespace SWCP
 			Custom,
 		};
 
-		Vertex(int64_t id, Type type, double x, double y, double z, float radius) : id(id), type(type), radius(radius), x(x), y(y), z(z)
+		Vertex(int64_t id, Type type, double x, double y, double z, float radius) : id(id), type(type), radius(radius), x(x), y(y), z(z), visited(false)
 		{};
 
 		int64_t id;
@@ -82,6 +82,7 @@ namespace SWCP
 		double z;
 		float radius;
 		Type type;
+		bool visited;
 	};
 		
 	struct Edge
@@ -95,6 +96,7 @@ namespace SWCP
 	
 	struct Graph
 	{
+		std::vector<int64_t> rootIDs;
 		std::vector<Vertex> vertices;
 		std::vector<Edge> edges;
 		std::vector<std::string> meta;
@@ -287,6 +289,10 @@ namespace SWCP
 									if (parent != -1)
 									{
 										graph.edges.push_back(Edge(parent, id));
+									}
+									else
+									{
+										graph.rootIDs.push_back(id);
 									}
 									return true;
 								}
