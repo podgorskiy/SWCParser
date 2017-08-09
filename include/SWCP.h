@@ -6,7 +6,7 @@
 #include <sstream>
 #include <map>
 
-namespace SWCP 
+namespace SWCP
 {
 	#if __cplusplus >= 201103L
 		#define SWCP_CPP11_COMPATIBLE
@@ -15,14 +15,14 @@ namespace SWCP
 		#define SWCP_CPP11_COMPATIBLE
 	#endif
 
-	// If not c++11 and if it is not version of MSVC that is c++11 compatible, 
+	// If not c++11 and if it is not version of MSVC that is c++11 compatible,
 	// then define own int64_t and uint64_t types in SWCP namespace.
 	#if !defined SWCP_CPP11_COMPATIBLE
 		typedef long long int int64_t;
 		typedef unsigned long long int uint64_t;
 	#endif
 
-	// strtoll and strtoull are not part of standard prior c++11, 
+	// strtoll and strtoull are not part of standard prior c++11,
 	// but are widely supported, except for MSVC that has own names for them
 	#if defined _MSC_VER && (_MSC_VER < 1800)
 		inline int64_t strtoll(char const* str, char** endPtr, int radix)
@@ -76,6 +76,8 @@ namespace SWCP
 		Vertex(int64_t id, Type type, double x, double y, double z, float radius) : id(id), type(type), radius(radius), x(x), y(y), z(z)
 		{};
 
+		Vertex() {};
+
 		int64_t id;
 		double x;
 		double y;
@@ -83,16 +85,18 @@ namespace SWCP
 		float radius;
 		Type type;
 	};
-		
+
 	struct Edge
 	{
 		Edge(int64_t idParent, int64_t idChild) : idParent(idParent), idChild(idChild)
 		{};
 
+		Edge() {};
+
 		int64_t idParent;
 		int64_t idChild;
 	};
-	
+
 	struct Graph
 	{
 		std::vector<Vertex> vertices;
@@ -103,21 +107,21 @@ namespace SWCP
 	class Parser
 	{
 	public:
-		// Reads SWC from filespecified by *filename*. 
-		// Output is written to *graph*, old content is errased. 
+		// Reads SWC from filespecified by *filename*.
+		// Output is written to *graph*, old content is errased.
 		// If no error have happened returns true
 		bool ReadSWCFromFile(const char *filename, Graph& graph);
 
-		// Reads SWC from filestream. 
-		// Output is written to graph, old content is errased. 
+		// Reads SWC from filestream.
+		// Output is written to graph, old content is errased.
 		// If no error have happened returns true
 		bool ReadSWC(std::istream &inStream, Graph& graph);
 
-		// Reads SWC from string. 
-		// Output is written to graph, old content is errased. 
+		// Reads SWC from string.
+		// Output is written to graph, old content is errased.
 		// If no error have happened returns true
 		bool ReadSWC(const char *string, Graph& graph);
-		
+
 		// Returns error message for the last parsing if error have happened.
 		std::string GetErrorMessage();
 	private:
@@ -130,7 +134,7 @@ namespace SWCP
 		bool AcceptInteger(int64_t& integer);
 		bool AcceptInteger(uint64_t& integer);
 		bool AcceptDouble(double& integer);
-		
+
 		const char* m_iterator;
 		int m_line;
 		std::stringstream m_errorMessage;
@@ -147,7 +151,7 @@ namespace SWCP
 
 		std::string GetErrorMessage();
 	private:
-		enum 
+		enum
 		{
 			MaxLineSize = 4096
 		};
@@ -171,7 +175,7 @@ namespace SWCP
 		file.read(content, size);
 
 		content[size] = '\0';
-		
+
 		bool result = ReadSWC(content, graph);
 
 		delete[] content;
@@ -292,7 +296,7 @@ namespace SWCP
 								}
 								else
 								{
-									m_errorMessage << "Error at line: " << m_line 
+									m_errorMessage << "Error at line: " << m_line
 										<< ", wrong parent. You need to specify an id of a perent, or -1 if there is no parent.\n";
 									return false;
 								}
