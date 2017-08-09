@@ -75,6 +75,8 @@ namespace SWCP
 
 		Vertex(int64_t id, Type type, double x, double y, double z, float radius) : id(id), type(type), radius(radius), x(x), y(y), z(z)
 		{};
+		
+		Vertex() {};
 
 		int64_t id;
 		double x;
@@ -88,6 +90,8 @@ namespace SWCP
 	{
 		Edge(int64_t idParent, int64_t idChild) : idParent(idParent), idChild(idChild)
 		{};
+		
+		Edge() {};
 
 		int64_t idParent;
 		int64_t idChild;
