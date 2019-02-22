@@ -17,7 +17,7 @@ namespace SWCP
 
 	// If not c++11 and if it is not version of MSVC that is c++11 compatible, 
 	// then define own int64_t and uint64_t types in SWCP namespace.
-	#if !defined SWCP_CPP11_COMPATIBLE
+	#if !defined SWCP_CPP11_COMPATIBLE && !defined SWIG
 		typedef long long int int64_t;
 		typedef unsigned long long int uint64_t;
 	#endif
@@ -495,6 +495,11 @@ namespace SWCP
 		bool result = Write(sstream, graph);
 		outString = sstream.str();
 		return result;
+	}
+
+	inline std::string Generator::GetErrorMessage()
+	{
+		return m_errorMessage.str();
 	}
 
 	inline bool Generator::WriteToFile(const char *filename, const Graph& graph)
