@@ -6,6 +6,10 @@
 #include <sstream>
 #include <map>
 
+#ifdef VS2013
+	#include <stdint.h>
+#endif
+
 namespace SWCP 
 {
 	#if __cplusplus >= 201103L
